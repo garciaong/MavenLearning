@@ -1,0 +1,104 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  	<modelVersion>4.0.0</modelVersion>
+  	<groupId>org.springframework.samples</groupId>
+  	<artifactId>soapws</artifactId>
+  	<version>0.0.1-SNAPSHOT</version>
+  	<name>soapws</name>
+  	<packaging>war</packaging>
+  	
+	<properties>
+		<jdk.version>1.8</jdk.version>
+		<resource.src>src/main/resources</resource.src>
+		<resource.target.classes>target/${name}/WEB-INF/classes</resource.target.classes>
+	</properties>
+	
+	<repositories>
+      	<repository>
+         	<id>main.maven.repo</id>
+        	<url>https://repo1.maven.org/maven2/</url>
+    	</repository>
+	</repositories>
+   
+	<dependencies>
+
+	</dependencies>
+	
+	<!--At Properties>Maven>Active Maven Profiles, enter the profile id to execute-->
+	<profiles>
+		<!--Profile for Local Development-->
+		<profile>
+			<id>dev</id>
+			<build>
+				<finalName>${name}</finalName>
+        		<plugins>
+        			<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.8</version>
+						<executions>
+							<execution>
+								<phase>install</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<delete file="${resource.target.classes}/env_prod.properties"/>	
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+           				<artifactId>maven-war-plugin</artifactId>
+           				<groupId>org.apache.maven.plugins</groupId>
+						<version>2.6</version>
+						<configuration>
+							<failOnMissingWebXml>false</failOnMissingWebXml>
+						</configuration>
+         			</plugin>
+				</plugins>    
+			</build>
+		</profile>
+
+		<!--Profile for Production Server -->
+		<profile>
+			<id>prod</id>
+			<build>
+				<finalName>${name}</finalName>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.8</version>
+						<executions>
+							<execution>
+								<phase>install</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<delete file="${resource.target.classes}/env.properties"/>
+										<delete file="${resource.target.classes}/env_prod.properties"/>
+										<copy file="${resource.src}/env_prod.properties"
+											tofile="${resource.target.classes}/env.properties" />
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>2.6</version>
+						<configuration>
+							<failOnMissingWebXml>false</failOnMissingWebXml>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	     
+</project>
