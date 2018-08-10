@@ -22,7 +22,7 @@
 	<dependencies>
 
 	</dependencies>
-	
+	<!-- mvn -Pdev install -->
 	<!--At Properties>Maven>Active Maven Profiles, enter the profile id to execute-->
 	<profiles>
 		<!--Profile for Local Development-->
